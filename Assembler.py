@@ -55,3 +55,15 @@ def type_b(line):
         if int(words[2][1:])>255 or int(words[2][1:])<0:
             error=True
             print("Error in line number ",line_no,"Inavlid immediate")
+def type_c(line):
+    words=line.split()
+    global error
+    if(len(words))!=3:
+        error=True
+        print("Error in line number",line_no, "Invalid Syntax")
+    if(not error):
+        for i in range(1,len(words)):
+            if words[i] not in reg:
+                error=True
+                print("Error in line number",line_no,"Invalid Register")
+                break
