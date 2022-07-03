@@ -166,7 +166,7 @@ for i in lines:
 				if(s[1] in var):
 				error=True
 				print("Error in line number",line1,"Invalid syntax- same variable declared again")
-				else:
+			else:
 				var.append(s[1])
     else:
         ecount+=1
