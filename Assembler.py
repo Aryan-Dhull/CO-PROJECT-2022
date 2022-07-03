@@ -31,3 +31,23 @@ def type_a(line):
                 error=True
                 print("Error in line number",line_no,"Invalid Register")
                 break
+def type_b(line):
+    words=line.split()
+    global error
+    if(len(words))!=3:
+        error=True
+        print("Error in line number",line_no, "Invalid Syntax")
+    if(not error):
+        if words[1] not in reg:
+            error=True
+            print("Error in line number",line_no,"Invalid Register")
+        if not (words[2][1:]).isdigit():
+            error=True
+            print("Error in line number ",line_no,"Inavlid immediate")
+        if '$' not in words[2]:
+            error=True
+            print("Error in line number",line_no, "Invalid Syntax")
+    if(not error):
+        if int(words[2][1:])>255 or int(words[2][1:])<0:
+            error=True
+            print("Error in line number ",line_no,"Inavlid immediate")
