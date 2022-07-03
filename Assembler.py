@@ -109,3 +109,23 @@ def type_f(line):
     if(T!=line_no):
         print("Error in line number",line_no, "hlt must be at the end")
         error=True
+def dec_binary(num): 
+    base_num = ""
+    while num>0:
+        dig = int(num%2)
+        if dig<10:
+            base_num += str(dig)
+        else:
+            base_num += chr(ord('A')+dig-10) 
+        num //= 2
+    base_num = base_num[::-1]
+    return base_num
+
+def binary_dec(num):
+    figures = [int(i,2) for i in str(num)]
+    figures = figures[::-1]
+    result = 0
+
+    for i in range(len(figures)):
+        result += figures*[i]2*i
+    return result
