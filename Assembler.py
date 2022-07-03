@@ -127,5 +127,11 @@ def binary_dec(num):
     result = 0
 
     for i in range(len(figures)):
-        result += figures*[i]2*i
+        result += figures*[i]*2**i
     return result
+line_no=1 #Starting from line zero
+line1=1
+line2=0
+vcount=0
+ecount=0
+inscount=-1
