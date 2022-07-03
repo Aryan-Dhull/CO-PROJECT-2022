@@ -31,6 +31,7 @@ def type_a(line):
                 error=True
                 print("Error in line number",line_no,"Invalid Register")
                 break
+		
 def type_b(line):
     words=line.split()
     global error
@@ -51,6 +52,7 @@ def type_b(line):
         if int(words[2][1:])>255 or int(words[2][1:])<0:
             error=True
             print("Error in line number ",line_no,"Inavlid immediate")
+		
 def type_c(line):
     words=line.split()
     global error
@@ -63,6 +65,7 @@ def type_c(line):
                 error=True
                 print("Error in line number",line_no,"Invalid Register")
                 break
+		
 def type_d(line):
     words=line.split()
     global error
@@ -83,6 +86,7 @@ def type_d(line):
         if(words[2] in labels):
             print("Error in line number",line_no, "Cannot use label in place of variable")
             error=True
+		
 def type_e(line):
     words=line.split()
     global error
@@ -97,6 +101,7 @@ def type_e(line):
         if(words[1] not in labels):
             print("Error in line number",line_no, "Undefined Label")
             error=True
+		
 def type_f(line):
     words=line.split()
     global error
@@ -109,6 +114,7 @@ def type_f(line):
     if(T!=line_no):
         print("Error in line number",line_no, "hlt must be at the end")
         error=True
+	
 def dec_binary(num): 
     base_num = ""
     while num>0:
@@ -129,6 +135,7 @@ def binary_dec(num):
     for i in range(len(figures)):
         result += figures*[i]*2**i
     return result
+
 line_no=1 #Starting from line zero
 line1=1
 line2=0
@@ -224,13 +231,16 @@ for h in range(len(lines)):
                         break
                 else:
                     t=False
+		
 if lines.count("hlt")>1:
     error=True
     print("Multiple hlt instructions")
+	
 T=len(lines)
 if(T>256):
     error=True
     print("Error - Number of lines is greater than 256")
+	
 if not error:
     for i in range (len(lines)):
             inscount+=1
