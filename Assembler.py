@@ -97,3 +97,15 @@ def type_e(line):
         if(words[1] not in labels):
             print("Error in line number",line_no, "Undefined Label")
             error=True
+def type_f(line):
+    words=line.split()
+    global error
+    if(len(words)!=1):
+        error=True
+        print("Error in line number",line_no, "Invalid Syntax")
+    if(not error):
+         if(words[0]!="hlt"):
+            print("Error in line number",line_no, "Invalid Syntax")
+    if(T!=line_no):
+        print("Error in line number",line_no, "hlt must be at the end")
+        error=True
