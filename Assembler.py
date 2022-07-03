@@ -416,3 +416,84 @@ if not error:
                         varadd=var_add[index]
                         s="10100"+regaddress[colon[1]]+varadd
                         check.append(s)
+                elif colon[0]=='st':
+                    type_d(lines[i])
+                    if error:
+                        break
+                    if(not error):
+                        sa=lines[i].split()
+                        index=var.index(sa[-1])
+                        varadd=var_add[index]
+                        s="10101"+regaddress[colon[1]]+varadd
+                        check.append(s)
+                elif colon[0]=='jmp':
+                    type_e(lines[i])
+                    if error:
+                        break
+                    if(not error): 
+                        j=labels.index(colon[1]) 
+                        r=labels_add[j]
+                        b=str(dec_binary(r))   
+                        g="0"*(8-len(b))         
+                        s="11111000"+g+b
+                        check.append(s)
+                elif colon[0]=='jlt':
+                    type_e(lines[i])
+                    if error:
+                        break
+                    if(not error):
+                        j=labels.index(colon[1]) 
+                        r=labels_add[j]
+                        b=str(dec_binary(r)) 
+                        g="0"*(8-len(b)) 
+                        s="01100"+"000"+g+b
+                        check.append(s)
+                elif colon[0]=='jgt':
+                    type_e(lines[i])
+                    if error:
+                        break
+                    if(not error):
+                        j=labels.index(colon[1]) 
+                        r=labels_add[j]
+                        b=str(dec_binary(r))
+                        g="0"*(8-len(b))  
+                        s="01101"+"000"+g+b
+                        check.append(s)
+                elif colon[0]=='je':
+                    type_e(lines[i])
+                    if error:
+                        break
+                    if(not error):
+                        j=labels.index(colon[1]) 
+                        r=labels_add[j]
+                        b=str(dec_binary(r)) 
+                        g="0"*(8-len(b)) 
+                        s="01111"+"000"+g+b
+                        check.append(s)
+                elif colon[0]=='hlt':
+                    type_f(lines[i])
+                    if(error):
+                        break
+                    if not error:                                                                                                                                                                                                                                                                                                                                 
+                        s="0101000000000000"
+                        check.append(s)
+                elif colon[0]=='var':
+                    varerror(lines[i])
+                    if inscount>0:
+                        print("Error on line number",line_no," Variable cannot be declared after instruction")
+                        error=True
+                    inscount-=1
+                    if error:
+                        break
+                else:
+                    error=True
+                    print("Error in line number",line_no,"Invalid instruction or label name")
+            line_no+=1
+
+if(not error):
+    if lines[-1]!="hlt":
+        print("Error in line number",line_no,"Invalid Syntax - No hlt at the end")
+        error=True
+
+if(not error):
+    print(*check,sep="\n")
