@@ -348,3 +348,71 @@ if not error:
                         zero="0"*(8-len(binary))
                         s='11000'+regaddress[colon[1]]+zero+binary
                         check.append(s)
+                elif colon[0]=='mov' and colon[1][0]=='R' and colon[2][0]=='R':
+                    type_c(lines[i])
+                    if error:
+                        break
+                    if(not error):
+                        r1=colon[1]
+                        r2=colon[2]
+                        s='1001100000'+regaddress[r1]+regaddress[r2]
+                        check.append(s)
+                elif colon[0]=='mov' and colon[1][0]=='R' and colon[2]=='FLAGS':
+                    error=True
+                    print("Error on line number",line_no,"Invalid use of flags")
+                    break
+                elif colon[0]=='mov' and colon[1]=='FLAGS' and colon[2][0]=='R':
+                    type_flag(lines[i])
+                    if error:
+                        break
+                    if(not error):
+                        r1=colon[1]
+                        r2=colon[2]
+                        s='1001100000'+regaddress[r1]+regaddress[r2]
+                        check.append(s)
+                elif colon[0]=='cmp':
+                    type_c(lines[i])
+                    if error:
+                        break
+                    if(not error):
+                        r1=colon[1]
+                        r2=colon[2]
+                        s='1111100000'+regaddress[r1]+regaddress[r2]
+                        check.append(s)
+                elif colon[0]=='not':
+                    type_c(lines[i])
+                    if error:
+                        break
+                    if(not error):
+                        r1=colon[1]
+                        r2=colon[2]
+                        s='1110100000'+regaddress[r1]+regaddress[r2]
+                        check.append(s)
+                elif colon[0]=='mov' and colon[2][0]=='$':
+                    type_b(lines[i])
+                    if error:
+                        break
+                    if not error:
+                        r1=colon[1]
+                        decimel=int(colon[2][1:])
+                        binary=dec_binary(decimel)
+                        zero="0"*(8-len(binary))
+                        s='10010'+regaddress[r1]+zero+binary
+                        check.append(s)
+                elif colon[0]=='div':
+                    type_c(lines[i])
+                    if error:
+                        break
+                    if(not error):
+                        s="10111"+"00000"+regaddress[colon[1]]+regaddress[colon[2]]
+                        check.append(s)
+                elif colon[0]=='ld':
+                    type_d(lines[i])
+                    if error:
+                        break
+                    if(not error):
+                        sa=lines[i].split()
+                        index=var.index(sa[-1])
+                        varadd=var_add[index]
+                        s="10100"+regaddress[colon[1]]+varadd
+                        check.append(s)
