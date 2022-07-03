@@ -83,3 +83,17 @@ def type_d(line):
         if(words[2] in labels):
             print("Error in line number",line_no, "Cannot use label in place of variable")
             error=True
+def type_e(line):
+    words=line.split()
+    global error
+    if(len(words)!=2):
+        error=True
+        print("Error in line number",line_no, "Invalid Syntax")
+    if(not error):
+        if(words[1] in var):
+            print("Error in line number",line_no, "Cannot use variable in place of label")
+            error=True
+    if(not error):
+        if(words[1] not in labels):
+            print("Error in line number",line_no, "Undefined Label")
+            error=True
