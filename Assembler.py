@@ -224,3 +224,94 @@ for h in range(len(lines)):
                         break
                 else:
                     t=False
+if lines.count("hlt")>1:
+    error=True
+    print("Multiple hlt instructions")
+T=len(lines)
+if(T>256):
+    error=True
+    print("Error - Number of lines is greater than 256")
+if not error:
+    for i in range (len(lines)):
+            inscount+=1
+            colon=lines[i].split()
+            if colon[0]=='add':
+                type_a(lines[i])
+                if error:
+                    break
+                if(not error):
+                    r1=colon[1]
+                    r2=colon[2]
+                    r3=colon[3]
+                    s="10000"+"00"+regaddress[r1]+regaddress[r2]+regaddress[r3]
+                    check.append(s)
+            elif colon[0]=='sub':
+                type_a(lines[i])
+                if error:
+                    break
+                if(not error):
+                    r1=colon[1]
+                    r2=colon[2]
+                    r3=colon[3]
+                    s="10001"+"00"+regaddress[r1]+regaddress[r2]+regaddress[r3]
+                    check.append(s)
+            elif colon[0]=='mul':
+                type_a(lines[i])
+                if(error):
+                    break
+                if(not error):
+                    r1=colon[1]
+                    r2=colon[2]
+                    r3=colon[3]
+                    s="10110"+"00"+regaddress[r1]+regaddress[r2]+regaddress[r3]
+                    check.append(s)
+            elif colon[0]=='and':
+                type_a(lines[i])
+                if error:
+                    break
+                if(not error):
+                    r1=colon[1]
+                    r2=colon[2]
+                    r3=colon[3]
+                    s="11100"+"00"+regaddress[r1]+regaddress[r2]+regaddress[r3]
+                    check.append(s)
+            elif colon[0]=='or':
+                type_a(lines[i])
+                if error:
+                    break
+                if(not error):
+                    r1=colon[1]
+                    r2=colon[2]
+                    r3=colon[3]
+                    s="11011"+"00"+regaddress[r1]+regaddress[r2]+regaddress[r3]
+                    check.append(s)
+            elif colon[0]=='xor':
+                type_a(lines[i])
+                if error:
+                    break
+                if(not error):
+                    r1=colon[1]
+                    r2=colon[2]
+                    r3=colon[3]
+                    s="11010"+"00"+regaddress[r1]+regaddress[r2]+regaddress[r3]
+                    check.append(s)
+            elif colon[0]=='ls':
+                type_b(lines[i])
+                if(error):
+                    break
+                if(not error):
+                    decimal=int(colon[2][1:])
+                    binary=dec_binary(decimal)
+                    zero="0"*(8-len(binary))
+                    s='11001'+regaddress[colon[1]]+zero+binary
+                    check.append(s)
+            elif colon[0]=='rs':
+                type_b(lines[i])
+                if(error):
+                    break
+                if(not error):
+                    decimal=int(colon[2][1:])
+                    binary=dec_binary(decimal)
+                    zero="0"*(8-len(binary))
+                    s='11000'+regaddress[colon[1]]+zero+binary
+                    check.append(s)
