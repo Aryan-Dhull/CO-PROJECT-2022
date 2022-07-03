@@ -18,3 +18,16 @@ var=[]
 check=[]
 
 error=False
+
+def type_a(line):
+    words=line.split()
+    global error
+    if(len(words))!=4:
+        error=True
+        print("Error in line number",line_no,"Invalid Syntax")
+    if(not error):
+        for i in range(1,len(words)):
+            if words[i] not in reg:
+                error=True
+                print("Error in line number",line_no,"Invalid Register")
+                break
