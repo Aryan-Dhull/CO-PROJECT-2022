@@ -171,3 +171,56 @@ def varerror(line):
     if (words[1]).isdigit() and not error:
         error=True
         print("Error in line number",line_no,"Invalid variable name")
+
+c=-1
+for h in range(len(lines)):
+    t=True
+    line2+=1
+    c+=1
+    d=lines[h].split()
+    if lines[h]=="":
+        c-=1
+    if d[0]=='var':
+        c-=1
+    if not error:
+        counter=0
+        while t and lines[h]!="":
+            if lines[h]!="":
+                colon=lines[h].split()
+                if colon[0][-1]==":":
+                    j=lines[h].split()
+                    if (j[0][0]).isdigit():
+                        error=True
+                        print("Error in line number",line2,"Invalid label name")
+                        break
+                    if (j[0][0:-1]).isdigit() and not error:
+                        error=True
+                        print("Error in line number",line2,"Invalid syntax - label name cannot be all numbers")
+                        break
+                    if not error and (j[0][0:-1] in var or j[0][0:-1] in symbol):
+                        error=True
+                        print("Error on line number",line2,"Invalid label name")
+                        break
+                    if not error and j[0][0:-1] not in labels and j[0][0:-1] not in nested_label:
+                        counter+=1
+                        if counter<2:
+                            labels.append(j[0][0:-1])
+                            ld=c
+                            labels_add.append(ld)
+                        else:
+                            nested_label.append(j[0][0:-1])
+                    else:
+                        error=True
+                        print("Error in line number",line2,"Invalid syntax - Multiple definitions of label",j[0][0:-1])
+                        break
+                    colon=colon[1:]
+                    s=""
+                    for i in range(len(colon)):
+                        s=s+colon[i]+" "
+                    lines[h]=s
+                    if d[0]=="var"and not error:
+                        error=True
+                        print("Error on line number",line2,"Invalid Syntax- Cannot define variable inside label")
+                        break
+                else:
+                    t=False
