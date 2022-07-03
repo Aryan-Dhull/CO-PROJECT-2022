@@ -117,3 +117,16 @@ def type_f(line):
     if(T!=line_no):
         print("Error in line number",line_no, "hlt must be at the end")
         error=True
+        
+def type_flag(line):
+    words=line.split()
+    global error
+    if(len(words))!=3:
+        error=True
+        print("Error in line number",line_no, "Invalid Syntax")
+    if(not error):
+        for i in range(1,len(words)):
+            if words[i] not in reg_flag:
+                error=True
+                print("Error in line number",line_no,"Invalid Register or Invalid Flag")
+                break
