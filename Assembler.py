@@ -130,3 +130,47 @@ def type_flag(line):
                 error=True
                 print("Error in line number",line_no,"Invalid Register or Invalid Flag")
                 break
+
+line_no=1 #Starting from line one
+line1=1
+line2=0
+vcount=0
+ecount=0
+inscount=-1
+
+for i in lines:
+    c=i.split()
+    if i!="":
+        if c[0]=='var':
+            vcount+=1
+            s=i.split()
+            if(len(s)>1):
+                if(s[1] in var):
+                    error=True
+                    print("Error in line number",line1,"Invalid syntax- same variable declared again")
+                else:
+                    var.append(s[1])
+    else:
+        ecount+=1
+    line1+=1
+
+var_add=[]
+v_c=vcount
+for j in var:
+    binary=dec_binary(len(lines)-vcount-ecount)
+    binary='0'*(8-len(binary))+binary
+    var_add.append(binary)
+    vcount-=1
+
+def varerror(line):
+    global error
+    words=line.split()
+    if len(words)!=2:
+        error=True
+        print("Error in line number",line_no,"Invalid syntax - insufficient arguments")
+    if (words[1][0]).isdigit() and not error:
+        error=True
+        print("Error in line number",line_no,"Invalid variable name")
+    if (words[1]).isdigit() and not error:
+        error=True
+        print("Error in line number",line_no,"Invalid variable name")
