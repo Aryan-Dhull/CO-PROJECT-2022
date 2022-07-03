@@ -63,3 +63,23 @@ def type_c(line):
                 error=True
                 print("Error in line number",line_no,"Invalid Register")
                 break
+def type_d(line):
+    words=line.split()
+    global error
+    if(len(words)!=3):
+        error=True
+        print("Error in line number",line_no, "Invalid Syntax")
+    if(not error):
+        for i in range(1,len(words)-1):
+            if words[i] not in reg:
+                error=True
+                print("Error in line number",line_no,"Invalid Register")
+                break
+    if(not error):
+        if(words[2] not in var):
+            print("Error in line number",line_no, "Undefined Variable")
+            error=True
+    if(not error):
+        if(words[2] in labels):
+            print("Error in line number",line_no, "Cannot use label in place of variable")
+            error=True
