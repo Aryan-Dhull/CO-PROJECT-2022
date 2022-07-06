@@ -160,7 +160,7 @@ inscount=-1
 
 for i in lines:
     c=i.split()
-    if i!="":
+    if len(c)>0:
         if c[0]=='var':
             vcount+=1
             s=i.split()
@@ -215,45 +215,46 @@ for h in range(len(lines)):
         while t and lines[h]!="":
             if lines[h]!="":
                 colon=lines[h].split()
-                if colon[0][-1]==":":
-                    j=lines[h].split()
-                    if (j[0][0]).isdigit():
-                        error=True
-                        print("Error in line number",line2,"Invalid label name")
-                        break
-                    if (j[0][0:-1]).isdigit() and not error:
-                        error=True
-                        print("Error in line number",line2,"Invalid syntax - label name cannot be all numbers")
-                        break
-                    if not error and (j[0][0:-1] in var or j[0][0:-1] in symbol):
-                        error=True
-                        print("Error on line number",line2,"Invalid label name")
-                        break
-                    if not error and j[0][0:-1] not in labels and j[0][0:-1] not in nested_label:
-                        counter+=1
-                        if counter<2:
-                            labels.append(j[0][0:-1])
-                            ld=c
-                            labels_add.append(ld)
-                        else:
-                            nested_label.append(j[0][0:-1])
-                    else:
-                        error=True
-                        print("Error in line number",line2,"Invalid syntax - Multiple definitions of label",j[0][0:-1])
-                        break
-                    colon=colon[1:]
-                    s=""
-                    for i in range(len(colon)):
-                        s=s+colon[i]+" "
-                    lines[h]=s
-                    d=lines[h].split()
-                    if lines[h]!="":
-                        if d[0]=="var"and not error:
+                if len(colon)>0:
+                    if colon[0][-1]==":":
+                        j=lines[h].split()
+                        if (j[0][0]).isdigit():
                             error=True
-                            print("Error on line number",line2,"Invalid Syntax- Cannot define variable inside label")
+                            print("Error in line number",line2,"Invalid label name")
                             break
-                else:
-                    t=False
+                        if (j[0][0:-1]).isdigit() and not error:
+                            error=True
+                            print("Error in line number",line2,"Invalid syntax - label name cannot be all numbers")
+                            break
+                        if not error and (j[0][0:-1] in var or j[0][0:-1] in symbol):
+                            error=True
+                            print("Error on line number",line2,"Invalid label name")
+                            break
+                        if not error and j[0][0:-1] not in labels and j[0][0:-1] not in nested_label:
+                            counter+=1
+                            if counter<2:
+                                labels.append(j[0][0:-1])
+                                ld=c
+                                labels_add.append(ld)
+                            else:
+                                nested_label.append(j[0][0:-1])
+                        else:
+                            error=True
+                            print("Error in line number",line2,"Invalid syntax - Multiple definitions of label",j[0][0:-1])
+                            break
+                        colon=colon[1:]
+                        s=""
+                        for i in range(len(colon)):
+                            s=s+colon[i]+" "
+                        lines[h]=s
+                        d=lines[h].split()
+                        if lines[h]!="":
+                            if d[0]=="var"and not error:
+                                error=True
+                                print("Error on line number",line2,"Invalid Syntax- Cannot define variable inside label")
+                                break
+                    else:
+                        t=False
 
 T=len(lines)
 if(T>256):
