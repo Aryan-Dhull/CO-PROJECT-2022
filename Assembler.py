@@ -104,6 +104,7 @@ def type_e(line):
         if(words[1] not in labels):
             print("Error in line number",line_no, "Undefined Label")
             error=True
+            
 def type_f(line):
     words=line.split()
     global error
@@ -114,9 +115,7 @@ def type_f(line):
          if(words[0]!="hlt"):
             print("Error in line number",line_no, "Invalid Syntax")
             error=True
-    if(T!=line_no):
-        print("Error in line number",line_no, "hlt must be at the end")
-        error=True
+
         
 def type_flag(line):
     words=line.split()
@@ -196,8 +195,6 @@ def varerror(line):
         error=True
         print("Error in line number",line_no,"Invalid variable name")
         
-
-
 if lines.count("hlt")>1:
     error=True
     print("Multiple hlt instructions")
@@ -268,7 +265,6 @@ if not error:
             colon=lines[i].split()
             if lines[i]=="":
                 inscount-=1
-                # line_no+=1
             else:
                 if colon[0]=='add':
                     type_a(lines[i])
@@ -493,9 +489,11 @@ if not error:
             line_no+=1
 
 if(not error):
-    if lines[-1]!="hlt":
-        print("Error in line number",line_no,"Invalid Syntax - No hlt at the end")
-        error=True
+    p=lines[-1].split()
+    if lines[-1]!="":
+        if p[0]!="hlt":
+            print("Error in line number",line_no,"Invalid Syntax - hlt must be at the end")
+            error=True
 
 if(not error):
     print(*check,sep="\n")
