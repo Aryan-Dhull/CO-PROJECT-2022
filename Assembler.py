@@ -375,7 +375,7 @@ if not error:
                     if(not error):
                         r1=colon[1]
                         r2=colon[2]
-                        s='1111100000'+regaddress[r1]+regaddress[r2]
+                        s='1111000000'+regaddress[r1]+regaddress[r2]
                         check.append(s)
                 elif colon[0]=='not':
                     type_c(lines[i])
