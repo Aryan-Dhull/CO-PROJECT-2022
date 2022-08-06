@@ -1,7 +1,7 @@
 import sys                                    
 lines = sys.stdin.read().splitlines()
 
-# with open ('input.txt',"r") as f:
+# with open ('sample_test_case.txt',"r") as f:
 # 	lines=f.read().splitlines()
 
 regaddress = {"R0":"000","R1":"001","R2":"010","R3":"011","R4":"100","R5":"101", "R6":"110","FLAGS":"111"}
@@ -197,7 +197,20 @@ def varerror(line):
         
 if lines.count("hlt")>1:
     error=True
-    print("Multiple hlt instructions")
+    ch=0
+    t=0
+    for i in range(len(lines)):
+        if lines[i]=='hlt':
+            h=i
+            if(i!=len(lines)-1):
+                print("hlt not at end, defined at line no.",h+1)
+                t=1
+                break
+            ch+=1
+        if ch==2:
+            break
+    if(t==0):
+        print("Multiple hlt instructions hlt defined again on line no",h+1)
 
 c=-1
 for h in range(len(lines)):
@@ -205,56 +218,57 @@ for h in range(len(lines)):
     line2+=1
     c+=1
     d=lines[h].split()
-    if lines[h]=="":
-        c-=1
-    if lines[h]!="":
-        if d[0]=='var':
+    if len(d)!=0:
+        if lines[h]=="":
             c-=1
-    if not error:
-        counter=0
-        while t and lines[h]!="":
-            if lines[h]!="":
-                colon=lines[h].split()
-                if len(colon)>0:
-                    if colon[0][-1]==":":
-                        j=lines[h].split()
-                        if (j[0][0]).isdigit():
-                            error=True
-                            print("Error in line number",line2,"Invalid label name")
-                            break
-                        if (j[0][0:-1]).isdigit() and not error:
-                            error=True
-                            print("Error in line number",line2,"Invalid syntax - label name cannot be all numbers")
-                            break
-                        if not error and (j[0][0:-1] in var or j[0][0:-1] in symbol):
-                            error=True
-                            print("Error on line number",line2,"Invalid label name")
-                            break
-                        if not error and j[0][0:-1] not in labels and j[0][0:-1] not in nested_label:
-                            counter+=1
-                            if counter<2:
-                                labels.append(j[0][0:-1])
-                                ld=c
-                                labels_add.append(ld)
-                            else:
-                                nested_label.append(j[0][0:-1])
-                        else:
-                            error=True
-                            print("Error in line number",line2,"Invalid syntax - Multiple definitions of label",j[0][0:-1])
-                            break
-                        colon=colon[1:]
-                        s=""
-                        for i in range(len(colon)):
-                            s=s+colon[i]+" "
-                        lines[h]=s
-                        d=lines[h].split()
-                        if lines[h]!="":
-                            if d[0]=="var"and not error:
+        if lines[h]!="":
+            if d[0]=='var':
+                c-=1
+        if not error:
+            counter=0
+            while t and lines[h]!="":
+                if lines[h]!="":
+                    colon=lines[h].split()
+                    if len(colon)>0:
+                        if colon[0][-1]==":":
+                            j=lines[h].split()
+                            if (j[0][0]).isdigit():
                                 error=True
-                                print("Error on line number",line2,"Invalid Syntax- Cannot define variable inside label")
+                                print("Error in line number",line2,"Invalid label name")
                                 break
-                    else:
-                        t=False
+                            if (j[0][0:-1]).isdigit() and not error:
+                                error=True
+                                print("Error in line number",line2,"Invalid syntax - label name cannot be all numbers")
+                                break
+                            if not error and (j[0][0:-1] in var or j[0][0:-1] in symbol):
+                                error=True
+                                print("Error on line number",line2,"Invalid label name")
+                                break
+                            if not error and j[0][0:-1] not in labels and j[0][0:-1] not in nested_label:
+                                counter+=1
+                                if counter<2:
+                                    labels.append(j[0][0:-1])
+                                    ld=c
+                                    labels_add.append(ld)
+                                else:
+                                    nested_label.append(j[0][0:-1])
+                            else:
+                                error=True
+                                print("Error in line number",line2,"Invalid syntax - Multiple definitions of label",j[0][0:-1])
+                                break
+                            colon=colon[1:]
+                            s=""
+                            for i in range(len(colon)):
+                                s=s+colon[i]+" "
+                            lines[h]=s
+                            d=lines[h].split()
+                            if lines[h]!="":
+                                if d[0]=="var"and not error:
+                                    error=True
+                                    print("Error on line number",line2,"Invalid Syntax- Cannot define variable inside label")
+                                    break
+                        else:
+                            t=False
 
 T=len(lines)
 if(T>256):
@@ -267,226 +281,227 @@ if not error:
             if lines[i]=="":
                 inscount-=1
             else:
-                if colon[0]=='add':
-                    type_a(lines[i])
-                    if error:
-                        break
-                    if(not error):
-                        r1=colon[1]
-                        r2=colon[2]
-                        r3=colon[3]
-                        s="10000"+"00"+regaddress[r1]+regaddress[r2]+regaddress[r3]
-                        check.append(s)
-                elif colon[0]=='sub':
-                    type_a(lines[i])
-                    if error:
-                        break
-                    if(not error):
-                        r1=colon[1]
-                        r2=colon[2]
-                        r3=colon[3]
-                        s="10001"+"00"+regaddress[r1]+regaddress[r2]+regaddress[r3]
-                        check.append(s)
-                elif colon[0]=='mul':
-                    type_a(lines[i])
-                    if(error):
-                        break
-                    if(not error):
-                        r1=colon[1]
-                        r2=colon[2]
-                        r3=colon[3]
-                        s="10110"+"00"+regaddress[r1]+regaddress[r2]+regaddress[r3]
-                        check.append(s)
-                elif colon[0]=='and':
-                    type_a(lines[i])
-                    if error:
-                        break
-                    if(not error):
-                        r1=colon[1]
-                        r2=colon[2]
-                        r3=colon[3]
-                        s="11100"+"00"+regaddress[r1]+regaddress[r2]+regaddress[r3]
-                        check.append(s)
-                elif colon[0]=='or':
-                    type_a(lines[i])
-                    if error:
-                        break
-                    if(not error):
-                        r1=colon[1]
-                        r2=colon[2]
-                        r3=colon[3]
-                        s="11011"+"00"+regaddress[r1]+regaddress[r2]+regaddress[r3]
-                        check.append(s)
-                elif colon[0]=='xor':
-                    type_a(lines[i])
-                    if error:
-                        break
-                    if(not error):
-                        r1=colon[1]
-                        r2=colon[2]
-                        r3=colon[3]
-                        s="11010"+"00"+regaddress[r1]+regaddress[r2]+regaddress[r3]
-                        check.append(s)
-                elif colon[0]=='ls':
-                    type_b(lines[i])
-                    if(error):
-                        break
-                    if(not error):
-                        decimal=int(colon[2][1:])
-                        binary=dec_binary(decimal)
-                        zero="0"*(8-len(binary))
-                        s='11001'+regaddress[colon[1]]+zero+binary
-                        check.append(s)
-                elif colon[0]=='rs':
-                    type_b(lines[i])
-                    if(error):
-                        break
-                    if(not error):
-                        decimal=int(colon[2][1:])
-                        binary=dec_binary(decimal)
-                        zero="0"*(8-len(binary))
-                        s='11000'+regaddress[colon[1]]+zero+binary
-                        check.append(s)
-                elif colon[0]=='mov' and colon[1][0]=='R' and colon[2][0]=='R':
-                    type_c(lines[i])
-                    if error:
-                        break
-                    if(not error):
-                        r1=colon[1]
-                        r2=colon[2]
-                        s='1001100000'+regaddress[r1]+regaddress[r2]
-                        check.append(s)
-                elif colon[0]=='mov' and colon[1][0]=='R' and colon[2]=='FLAGS':
-                    error=True
-                    print("Error on line number",line_no,"Invalid use of flags")
-                    break
-                elif colon[0]=='mov' and colon[1]=='FLAGS' and colon[2][0]=='R':
-                    type_flag(lines[i])
-                    if error:
-                        break
-                    if(not error):
-                        r1=colon[1]
-                        r2=colon[2]
-                        s='1001100000'+regaddress[r1]+regaddress[r2]
-                        check.append(s)
-                elif colon[0]=='cmp':
-                    type_c(lines[i])
-                    if error:
-                        break
-                    if(not error):
-                        r1=colon[1]
-                        r2=colon[2]
-                        s='1111000000'+regaddress[r1]+regaddress[r2]
-                        check.append(s)
-                elif colon[0]=='not':
-                    type_c(lines[i])
-                    if error:
-                        break
-                    if(not error):
-                        r1=colon[1]
-                        r2=colon[2]
-                        s='1110100000'+regaddress[r1]+regaddress[r2]
-                        check.append(s)
-                elif colon[0]=='mov' and colon[2][0]=='$':
-                    type_b(lines[i])
-                    if error:
-                        break
-                    if not error:
-                        r1=colon[1]
-                        decimel=int(colon[2][1:])
-                        binary=dec_binary(decimel)
-                        zero="0"*(8-len(binary))
-                        s='10010'+regaddress[r1]+zero+binary
-                        check.append(s)
-                elif colon[0]=='div':
-                    type_c(lines[i])
-                    if error:
-                        break
-                    if(not error):
-                        s="10111"+"00000"+regaddress[colon[1]]+regaddress[colon[2]]
-                        check.append(s)
-                elif colon[0]=='ld':
-                    type_d(lines[i])
-                    if error:
-                        break
-                    if(not error):
-                        sa=lines[i].split()
-                        index=var.index(sa[-1])
-                        varadd=var_add[index]
-                        s="10100"+regaddress[colon[1]]+varadd
-                        check.append(s)
-                elif colon[0]=='st':
-                    type_d(lines[i])
-                    if error:
-                        break
-                    if(not error):
-                        sa=lines[i].split()
-                        index=var.index(sa[-1])
-                        varadd=var_add[index]
-                        s="10101"+regaddress[colon[1]]+varadd
-                        check.append(s)
-                elif colon[0]=='jmp':
-                    type_e(lines[i])
-                    if error:
-                        break
-                    if(not error): 
-                        j=labels.index(colon[1]) 
-                        r=labels_add[j]
-                        b=str(dec_binary(r))   
-                        g="0"*(8-len(b))         
-                        s="11111000"+g+b
-                        check.append(s)
-                elif colon[0]=='jlt':
-                    type_e(lines[i])
-                    if error:
-                        break
-                    if(not error):
-                        j=labels.index(colon[1]) 
-                        r=labels_add[j]
-                        b=str(dec_binary(r)) 
-                        g="0"*(8-len(b)) 
-                        s="01100"+"000"+g+b
-                        check.append(s)
-                elif colon[0]=='jgt':
-                    type_e(lines[i])
-                    if error:
-                        break
-                    if(not error):
-                        j=labels.index(colon[1]) 
-                        r=labels_add[j]
-                        b=str(dec_binary(r))
-                        g="0"*(8-len(b))  
-                        s="01101"+"000"+g+b
-                        check.append(s)
-                elif colon[0]=='je':
-                    type_e(lines[i])
-                    if error:
-                        break
-                    if(not error):
-                        j=labels.index(colon[1]) 
-                        r=labels_add[j]
-                        b=str(dec_binary(r)) 
-                        g="0"*(8-len(b)) 
-                        s="01111"+"000"+g+b
-                        check.append(s)
-                elif colon[0]=='hlt':
-                    type_f(lines[i])
-                    if(error):
-                        break
-                    if not error:                                                                                                                                                                                                                                                                                                                                 
-                        s="0101000000000000"
-                        check.append(s)
-                elif colon[0]=='var':
-                    varerror(lines[i])
-                    if inscount>0:
-                        print("Error on line number",line_no," Variable cannot be declared after instruction")
+                if len(colon)!=0:
+                    if colon[0]=='add':
+                        type_a(lines[i])
+                        if error:
+                            break
+                        if(not error):
+                            r1=colon[1]
+                            r2=colon[2]
+                            r3=colon[3]
+                            s="10000"+"00"+regaddress[r1]+regaddress[r2]+regaddress[r3]
+                            check.append(s)
+                    elif colon[0]=='sub':
+                        type_a(lines[i])
+                        if error:
+                            break
+                        if(not error):
+                            r1=colon[1]
+                            r2=colon[2]
+                            r3=colon[3]
+                            s="10001"+"00"+regaddress[r1]+regaddress[r2]+regaddress[r3]
+                            check.append(s)
+                    elif colon[0]=='mul':
+                        type_a(lines[i])
+                        if(error):
+                            break
+                        if(not error):
+                            r1=colon[1]
+                            r2=colon[2]
+                            r3=colon[3]
+                            s="10110"+"00"+regaddress[r1]+regaddress[r2]+regaddress[r3]
+                            check.append(s)
+                    elif colon[0]=='and':
+                        type_a(lines[i])
+                        if error:
+                            break
+                        if(not error):
+                            r1=colon[1]
+                            r2=colon[2]
+                            r3=colon[3]
+                            s="11100"+"00"+regaddress[r1]+regaddress[r2]+regaddress[r3]
+                            check.append(s)
+                    elif colon[0]=='or':
+                        type_a(lines[i])
+                        if error:
+                            break
+                        if(not error):
+                            r1=colon[1]
+                            r2=colon[2]
+                            r3=colon[3]
+                            s="11011"+"00"+regaddress[r1]+regaddress[r2]+regaddress[r3]
+                            check.append(s)
+                    elif colon[0]=='xor':
+                        type_a(lines[i])
+                        if error:
+                            break
+                        if(not error):
+                            r1=colon[1]
+                            r2=colon[2]
+                            r3=colon[3]
+                            s="11010"+"00"+regaddress[r1]+regaddress[r2]+regaddress[r3]
+                            check.append(s)
+                    elif colon[0]=='ls':
+                        type_b(lines[i])
+                        if(error):
+                            break
+                        if(not error):
+                            decimal=int(colon[2][1:])
+                            binary=dec_binary(decimal)
+                            zero="0"*(8-len(binary))
+                            s='11001'+regaddress[colon[1]]+zero+binary
+                            check.append(s)
+                    elif colon[0]=='rs':
+                        type_b(lines[i])
+                        if(error):
+                            break
+                        if(not error):
+                            decimal=int(colon[2][1:])
+                            binary=dec_binary(decimal)
+                            zero="0"*(8-len(binary))
+                            s='11000'+regaddress[colon[1]]+zero+binary
+                            check.append(s)
+                    elif colon[0]=='mov' and colon[1][0]=='R' and colon[2][0]=='R':
+                        type_c(lines[i])
+                        if error:
+                            break
+                        if(not error):
+                            r1=colon[1]
+                            r2=colon[2]
+                            s='1001100000'+regaddress[r1]+regaddress[r2]
+                            check.append(s)
+                    elif colon[0]=='mov' and colon[1][0]=='R' and colon[2]=='FLAGS':
                         error=True
-                    inscount-=1
-                    if error:
+                        print("Error on line number",line_no,"Invalid use of flags")
                         break
-                else:
-                    error=True
-                    print("Error in line number",line_no,"Invalid instruction or label name")
+                    elif colon[0]=='mov' and colon[1]=='FLAGS' and colon[2][0]=='R':
+                        type_flag(lines[i])
+                        if error:
+                            break
+                        if(not error):
+                            r1=colon[1]
+                            r2=colon[2]
+                            s='1001100000'+regaddress[r1]+regaddress[r2]
+                            check.append(s)
+                    elif colon[0]=='cmp':
+                        type_c(lines[i])
+                        if error:
+                            break
+                        if(not error):
+                            r1=colon[1]
+                            r2=colon[2]
+                            s='1111000000'+regaddress[r1]+regaddress[r2]
+                            check.append(s)
+                    elif colon[0]=='not':
+                        type_c(lines[i])
+                        if error:
+                            break
+                        if(not error):
+                            r1=colon[1]
+                            r2=colon[2]
+                            s='1110100000'+regaddress[r1]+regaddress[r2]
+                            check.append(s)
+                    elif colon[0]=='mov' and colon[2][0]=='$':
+                        type_b(lines[i])
+                        if error:
+                            break
+                        if not error:
+                            r1=colon[1]
+                            decimel=int(colon[2][1:])
+                            binary=dec_binary(decimel)
+                            zero="0"*(8-len(binary))
+                            s='10010'+regaddress[r1]+zero+binary
+                            check.append(s)
+                    elif colon[0]=='div':
+                        type_c(lines[i])
+                        if error:
+                            break
+                        if(not error):
+                            s="10111"+"00000"+regaddress[colon[1]]+regaddress[colon[2]]
+                            check.append(s)
+                    elif colon[0]=='ld':
+                        type_d(lines[i])
+                        if error:
+                            break
+                        if(not error):
+                            sa=lines[i].split()
+                            index=var.index(sa[-1])
+                            varadd=var_add[index]
+                            s="10100"+regaddress[colon[1]]+varadd
+                            check.append(s)
+                    elif colon[0]=='st':
+                        type_d(lines[i])
+                        if error:
+                            break
+                        if(not error):
+                            sa=lines[i].split()
+                            index=var.index(sa[-1])
+                            varadd=var_add[index]
+                            s="10101"+regaddress[colon[1]]+varadd
+                            check.append(s)
+                    elif colon[0]=='jmp':
+                        type_e(lines[i])
+                        if error:
+                            break
+                        if(not error): 
+                            j=labels.index(colon[1]) 
+                            r=labels_add[j]
+                            b=str(dec_binary(r))   
+                            g="0"*(8-len(b))         
+                            s="11111000"+g+b
+                            check.append(s)
+                    elif colon[0]=='jlt':
+                        type_e(lines[i])
+                        if error:
+                            break
+                        if(not error):
+                            j=labels.index(colon[1]) 
+                            r=labels_add[j]
+                            b=str(dec_binary(r)) 
+                            g="0"*(8-len(b)) 
+                            s="01100"+"000"+g+b
+                            check.append(s)
+                    elif colon[0]=='jgt':
+                        type_e(lines[i])
+                        if error:
+                            break
+                        if(not error):
+                            j=labels.index(colon[1]) 
+                            r=labels_add[j]
+                            b=str(dec_binary(r))
+                            g="0"*(8-len(b))  
+                            s="01101"+"000"+g+b
+                            check.append(s)
+                    elif colon[0]=='je':
+                        type_e(lines[i])
+                        if error:
+                            break
+                        if(not error):
+                            j=labels.index(colon[1]) 
+                            r=labels_add[j]
+                            b=str(dec_binary(r)) 
+                            g="0"*(8-len(b)) 
+                            s="01111"+"000"+g+b
+                            check.append(s)
+                    elif colon[0]=='hlt':
+                        type_f(lines[i])
+                        if(error):
+                            break
+                        if not error:                                                                                                                                                                                                                                                                                                                                 
+                            s="0101000000000000"
+                            check.append(s)
+                    elif colon[0]=='var':
+                        varerror(lines[i])
+                        if inscount>0:
+                            print("Error on line number",line_no," Variable cannot be declared after instruction")
+                            error=True
+                        inscount-=1
+                        if error:
+                            break
+                    else:
+                        error=True
+                        print("Error in line number",line_no,"Invalid instruction or label name")
             line_no+=1
 
 if(not error):
