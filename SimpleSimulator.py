@@ -257,7 +257,6 @@ while(not halt):
         elif(ins == 'mov' or ins == 'div' or ins == 'cmp' or ins == 'not'):
             if(op!='10011'):
                 freset(flags)
-            # print("aads")
             type_c(op,i)
             if(op=='10011'):
                 freset(flags)
@@ -272,7 +271,7 @@ while(not halt):
             type_e(op,i)
             freset(flags)
         elif(ins=='hlt'):
-            # freset(flags)
+            freset(flags)
             halt=True
         cycles.append(cc)
         cc+=1
